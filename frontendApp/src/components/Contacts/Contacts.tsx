@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, TextInput } from "react-native";
+import { View, Text, StyleSheet, } from "react-native";
 import {
   SafeAreaProvider,
   useSafeAreaInsets,
@@ -38,51 +38,7 @@ const styles = StyleSheet.create({
     color: "#4C51F7",
     marginVertical: 10,
     textAlign: "center",
-  },
-  searchInput: {
-    height: 40,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 20,
-    paddingHorizontal: 15,
-    marginBottom: 15,
-  },
-  sectionHeader: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#4C51F7",
-    marginVertical: 10,
-  },
-  contactItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-  },
-  iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#E0E7FF",
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 10,
-  },
-  iconText: {
-    color: "#4C51F7",
-    fontWeight: "bold",
-  },
-  name: {
-    fontSize: 16,
-    fontWeight: "500",
-  },
-  phone: {
-    color: "#6B7280",
-  },
-  chevron: {
-    marginLeft: "auto",
-  },
+  }
 });
 
 export default ContactsScreen;
