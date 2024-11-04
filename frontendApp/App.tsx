@@ -3,12 +3,13 @@ import Account from "./src/components/Account/Account";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import ContactsScreen from "./src/components/Contacts/Contacts";
 import MoneyData from "./src/components/Money/SetMoneyData";
+import MovementDetail from "./src/components/Movements/MovementDetail";
 
 export default function App() {
   return (
     <SafeAreaProvider>
         <View style={styles.container}>
-          <MoneyData />
+          <MovementDetail />
         </View>
     </SafeAreaProvider>
   );
