@@ -1,20 +1,23 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { View, StyleSheet, ScrollView } from "react-native";
+import Account from "./src/components/Account/Account";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import ContactsScreen from "./src/components/Contacts/Contacts";
+import MoneyData from "./src/components/Money/SetMoneyData";
+import MovementDetail from "./src/components/Movements/MovementDetail";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaProvider>
+        <View style={styles.container}>
+          <MovementDetail />
+        </View>
+    </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flex:1,
+    paddingHorizontal: 12,
   },
 });
