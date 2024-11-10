@@ -2,7 +2,7 @@ import { View, StyleSheet, ScrollView } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Account from "./src/components/Account/Account";
 import ContactsScreen from "./src/components/Contacts/Contacts";
-import MoneyData from "./src/components/Money/Sinpe";
+import MoneyData from "./src/components/Sinpe/Sinpe";
 import MovementDetail from "./src/components/Movements/MovementDetail";
 
 export default function App() {

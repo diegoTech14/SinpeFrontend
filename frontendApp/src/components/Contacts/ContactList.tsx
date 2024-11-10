@@ -11,6 +11,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import api from "../../../api";
 import { Contact } from "../../interfaces";
+import { contactListStyles as styles } from "./styles";
 
 type ContactItemProps = {
   name: string;
@@ -94,55 +95,6 @@ const ContactList = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 16,
-    backgroundColor: "#fff",
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#4C51F7",
-    marginVertical: 10,
-    textAlign: "center",
-  },
-  sectionHeader: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#4C51F7",
-    marginVertical: 10,
-  },
-  contactItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-  },
-  iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#E0E7FF",
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 10,
-  },
-  iconText: {
-    color: "#4C51F7",
-    fontWeight: "bold",
-  },
-  name: {
-    fontSize: 16,
-    fontWeight: "500",
-  },
-  phone: {
-    color: "#6B7280",
-  },
-  chevron: {
-    marginLeft: "auto",
-  },
-});
+
 
 export default ContactList;

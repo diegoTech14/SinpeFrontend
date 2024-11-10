@@ -7,7 +7,7 @@ import {
 import AntDesign from "@expo/vector-icons/AntDesign";
 import ContactList from "./ContactList";
 import SearchBar from "./SearchBar";
-
+import { mainContactStyles as styles } from "./styles";
 
 const ContactsScreen = () => {
   const insets = useSafeAreaInsets();
@@ -26,19 +26,6 @@ const ContactsScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 16,
-    backgroundColor: "#fff",
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#4C51F7",
-    marginVertical: 10,
-    textAlign: "center",
-  }
-});
+
 
 export default ContactsScreen;
