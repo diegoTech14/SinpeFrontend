@@ -1,18 +1,62 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaProvider,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
-
-const onPressButton = () => {
-  Alert.alert("¡Botón presionado!");
-};
+import { MovementDetailObject, Movement } from "../../interfaces";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import api from "../../../api";
 
 const MoneyData = () => {
+  
+  type ContactItemProps = {
+    name: string;
+    initials: string;
+    phone: string;
+  };
+  
   const insets = useSafeAreaInsets();
+  const [movement, setMovement] = useState<Movement>();
+  const [userData, setUserData] = useState<ContactItemProps>({
+    name: "",
+    initials: "",
+    phone: "",
+  });
 
+  const initialsName = async () => {
+    const contact = await AsyncStorage.getItem("user");
+    const contactObject = JSON.parse(contact || "");
+    const name = contactObject.name;
+
+    const initials = name
+      .split(" ")
+      .slice(0, 2)
+      .map((word: string) => word.charAt(0).toUpperCase())
+      .join("");
+
+      setUserData({
+      name: name,
+      initials: initials,
+      phone: contactObject.phone,
+    });
+  };
+
+
+  const getMovementDetail = async ()  => {
+    const movObject = await AsyncStorage.getItem("movement");
+    const movStorage = JSON.parse(movObject || "");
+    console.log(movStorage)
+    const response = await api.get<Movement>(`/movement/${movStorage.phone}/${movStorage.id}`)
+    setMovement(response.data);
+  }
+
+  useEffect(() => {
+    getMovementDetail();
+    initialsName();
+  },[]);
+  
   return (
     <SafeAreaProvider>
       <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -22,23 +66,23 @@ const MoneyData = () => {
         </View>
         <View style={styles.content}>
           <View style={styles.iconContainer}>
-            <Text style={styles.iconText}>CN</Text>
+            <Text style={styles.iconText}>{userData.initials}</Text>
           </View>
 
           <Text style={styles.transactionTitle}>
-            SINPE móvil - Carlos Naranjo
+            SINPE móvil - {userData.name}
           </Text>
-          <Text style={styles.amount}>₡30,000.00</Text>
+          <Text style={styles.amount}>₡{movement?.ammount}</Text>
         </View>
         <View>
           <Text style={styles.label}>Fecha</Text>
-          <Text style={styles.text}>12 de Octubre 2022, 12:15 pm</Text>
+          <Text style={styles.text}>{movement?.date} {movement?.hour}</Text>
           <Text style={styles.label}>Descripción</Text>
-          <Text style={styles.text}>Fiesta de Hallowink</Text>
+          <Text style={styles.text}>{movement?.description}</Text>
           <Text style={styles.label}>Tipo de movimiento</Text>
           <Text style={styles.text}>SINPE móvil</Text>
         </View>
-        <TouchableOpacity style={styles.button} onPress={onPressButton}>
+        <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Volver</Text>
         </TouchableOpacity>
       </View>
