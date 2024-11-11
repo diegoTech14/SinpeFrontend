@@ -53,6 +53,11 @@ const accountBalanceStyles = StyleSheet.create({
       color: "red",
       fontWeight: "600",
     },
+    loader:{
+      flex:1,
+      alignContent:"center",
+      justifyContent:"center"
+    }
   });
 
   const mainAccountStyles = StyleSheet.create({
@@ -62,6 +67,8 @@ const accountBalanceStyles = StyleSheet.create({
     image: {
       marginTop: 30,
       marginBottom: 20,
+      alignItems: "center",
+      justifyContent: "center",
     },
     button: {
       alignItems: "center",

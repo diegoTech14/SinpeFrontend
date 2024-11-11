@@ -1,6 +1,6 @@
-import Account from "../src/components/Account/Account";
-import ContactList from "../src/components/Contacts/ContactList";
+import Account from "./Account";
 
 export default function Index() {
-    return <Account/>
+  return <Account />
 }
+

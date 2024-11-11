@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  StyleSheet,
+  ActivityIndicator,
   SectionList,
   TouchableOpacity,
 } from "react-native";
@@ -12,6 +12,7 @@ import api from "../../../api";
 import { Contact } from "../../interfaces";
 import { contactListStyles as styles } from "./styles";
 import { initialsFormat } from "../../utils";
+import { Link } from "expo-router";
 
 type ContactItemProps = {
   name: string;
@@ -20,30 +21,40 @@ type ContactItemProps = {
 
 const handleStorage = async (object: ContactItemProps) => {
   await AsyncStorage.setItem("user", JSON.stringify(object));
-}
+};
 
 const ContactItem: React.FC<ContactItemProps> = ({ name, phone }) => {
-  
   const initials = initialsFormat(name);
 
   return (
-    <TouchableOpacity style={styles.contactItem}
-      onPress={() => handleStorage({name, phone})}
+    <Link href="/Sinpe" asChild>
+      <TouchableOpacity
+        style={styles.contactItem}
+        onPress={() => handleStorage({ name, phone })}
       >
-      <View style={styles.iconContainer}>
-        <Text style={styles.iconText}>{initials}</Text>
-      </View>
-      <View>
-        <Text style={styles.name}>{name}</Text>
-        <Text style={styles.phone}>+506 {phone}</Text>
-      </View>
-      <FontAwesome6 name="chevron-right" size={20} color="#5A67D8" style={styles.chevron} />
-    </TouchableOpacity>
+        <View style={styles.iconContainer}>
+          <Text style={styles.iconText}>{initials}</Text>
+        </View>
+        <View>
+          <Text style={styles.name}>{name}</Text>
+          <Text style={styles.phone}>+506 {phone}</Text>
+        </View>
+        <FontAwesome6
+          name="chevron-right"
+          size={20}
+          color="#5A67D8"
+          style={styles.chevron}
+        />
+      </TouchableOpacity>
+    </Link>
   );
 };
 
 const ContactList = () => {
-  const [sections, setSections] = useState<{ title: string; data: Contact[] }[]>([]);
+  const [sections, setSections] = useState<
+    { title: string; data: Contact[] }[]
+  >([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const getContacts = async () => {
     try {
@@ -51,15 +62,19 @@ const ContactList = () => {
       const response = await api.get<Contact[]>(`/all/${userPhone}`);
       const formattedSections = formatContacts(response.data);
       setSections(formattedSections);
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching contacts:", error);
+      setLoading(false);
     }
   };
 
-  const formatContacts = (contacts: Contact[]): { title: string; data: Contact[] }[] => {
+  const formatContacts = (
+    contacts: Contact[]
+  ): { title: string; data: Contact[] }[] => {
     const groupedContacts: { [key: string]: Contact[] } = {};
 
-    contacts.forEach(contact => {
+    contacts.forEach((contact) => {
       const firstLetter = contact.name.charAt(0).toUpperCase();
       if (!groupedContacts[firstLetter]) {
         groupedContacts[firstLetter] = [];
@@ -67,10 +82,12 @@ const ContactList = () => {
       groupedContacts[firstLetter].push(contact);
     });
 
-    return Object.keys(groupedContacts).sort().map(letter => ({
-      title: letter,
-      data: groupedContacts[letter],
-    }));
+    return Object.keys(groupedContacts)
+      .sort()
+      .map((letter) => ({
+        title: letter,
+        data: groupedContacts[letter],
+      }));
   };
 
   useEffect(() => {
@@ -79,18 +96,22 @@ const ContactList = () => {
 
   return (
     <View style={styles.container}>
-      <SectionList
-        sections={sections}
-        keyExtractor={(item, index) => item.phone + index}
-        renderItem={({ item }) => <ContactItem name={item.name} phone={item.phone} />}
-        renderSectionHeader={({ section: { title } }) => (
-          <Text style={styles.sectionHeader}>{title}</Text>
-        )}
-      />
+      {loading ? (
+        <ActivityIndicator size="large" color="#4C51F7" />
+      ) : (
+        <SectionList
+          sections={sections}
+          keyExtractor={(item, index) => item.phone + index}
+          renderItem={({ item }) => (
+            <ContactItem name={item.name} phone={item.phone} />
+          )}
+          renderSectionHeader={({ section: { title } }) => (
+            <Text style={styles.sectionHeader}>{title}</Text>
+          )}
+        />
+      )}
     </View>
   );
 };
-
-
 
 export default ContactList;

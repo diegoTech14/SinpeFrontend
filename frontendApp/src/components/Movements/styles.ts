@@ -67,6 +67,11 @@ const movementDetailStyles = StyleSheet.create({
       fontSize: 15,
       fontWeight: "bold",
     },
+    loader:{
+      flex:1,
+      alignContent:"center",
+      justifyContent:"center"
+    }
   });
   
 export {

@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaProvider, useSafeAreaInsets, } from "react-native-safe-area-context";
+import {
+  SafeAreaProvider,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import { View, Text, TouchableOpacity, TextInput } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Sinpe } from "../../interfaces";
-import api from "../../../api";
+import { Sinpe } from "../src/interfaces";
+import api from "../api";
 import { sinpeStyles as styles } from "./styles";
-import { initialsFormat } from "../../utils";
+import { initialsFormat } from "../src/utils";
+import { Link } from "expo-router";
+import { ActivityIndicator } from "react-native";
 
 type ContactItemProps = {
   name: string;
@@ -15,7 +20,6 @@ type ContactItemProps = {
 };
 
 const MoneyData = () => {
-
   const insets = useSafeAreaInsets();
   const [sinpeData, setSinpeData] = useState<Sinpe>({
     phoneSend: "",
@@ -88,38 +92,45 @@ const MoneyData = () => {
 
   return (
     <SafeAreaProvider>
-      <View style={[styles.container, { paddingTop: insets.top }]}>
-        <Text style={styles.title}>
-          <AntDesign name="arrowleft" size={24} color="black" /> Enviar dinero{" "}
-        </Text>
-        <Text style={styles.transferTitle}>Transferir a</Text>
-        <TouchableOpacity style={styles.contactItem}>
-          <View style={styles.iconContainer}>
-            <Text style={styles.iconText}>{userData.initials}</Text>
-          </View>
-          <View>
-            <Text style={styles.name}>{userData.name}</Text>
-            <Text style={styles.phone}>+506 {userData.phone}</Text>
-          </View>
-        </TouchableOpacity>
-        <Text style={styles.label}>Monto</Text>
-        <TextInput
-          onChangeText={(text) => handleInputChange("ammount", text)}
-          placeholder="Monto a transferir"
-          style={styles.searchInput}
-        />
-        <Text style={styles.label}>Detalle</Text>
-        <TextInput
-          onChangeText={(text) => handleInputChange("detail", text)}
-          placeholder="Detalle"
-          style={styles.searchInput}
-        />
-        <View>
-          <TouchableOpacity style={styles.button} onPress={sinpe}>
-            <Text style={styles.buttonText}>Confirmar</Text>
+      {userData ? (
+        <View style={[styles.container, { paddingTop: insets.top }]}>
+          <Text style={styles.title}>
+            <Link href="/Contacts">
+              <AntDesign name="arrowleft" size={24} color="black" />
+            </Link>
+            Enviar dinero{" "}
+          </Text>
+          <Text style={styles.transferTitle}>Transferir a</Text>
+          <TouchableOpacity style={styles.contactItem}>
+            <View style={styles.iconContainer}>
+              <Text style={styles.iconText}>{userData.initials}</Text>
+            </View>
+            <View>
+              <Text style={styles.name}>{userData.name}</Text>
+              <Text style={styles.phone}>+506 {userData.phone}</Text>
+            </View>
           </TouchableOpacity>
+          <Text style={styles.label}>Monto</Text>
+          <TextInput
+            onChangeText={(text) => handleInputChange("ammount", text)}
+            placeholder="Monto a transferir"
+            style={styles.searchInput}
+          />
+          <Text style={styles.label}>Detalle</Text>
+          <TextInput
+            onChangeText={(text) => handleInputChange("detail", text)}
+            placeholder="Detalle"
+            style={styles.searchInput}
+          />
+          <View>
+            <TouchableOpacity onPress={sinpe} style={styles.button}>
+              <Text style={styles.buttonText}>Confirmar</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      ) : (
+        <ActivityIndicator style={styles.loader} size="large" color="#5A67D8" />
+      )}
     </SafeAreaProvider>
   );
 };

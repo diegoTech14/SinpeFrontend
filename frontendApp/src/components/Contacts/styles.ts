@@ -4,7 +4,6 @@ const contactListStyles = StyleSheet.create({
     container: {
       flex: 1,
       paddingHorizontal: 16,
-      backgroundColor: "#fff",
     },
     title: {
       fontSize: 18,
@@ -22,7 +21,7 @@ const contactListStyles = StyleSheet.create({
     contactItem: {
       flexDirection: "row",
       alignItems: "center",
-      paddingVertical: 10,
+      paddingVertical: 16,
       borderBottomWidth: 1,
       borderBottomColor: "#eee",
     },
@@ -51,21 +50,6 @@ const contactListStyles = StyleSheet.create({
     },
   });
 
-  const mainContactStyles = StyleSheet.create({
-    container: {
-      flex: 1,
-      paddingHorizontal: 16,
-      backgroundColor: "#fff",
-    },
-    title: {
-      fontSize: 18,
-      fontWeight: "bold",
-      color: "#4C51F7",
-      marginVertical: 10,
-      textAlign: "center",
-    }
-  });
-
   const searchBarStyles = StyleSheet.create({
     searchInput: {
       height: 40,
@@ -80,6 +64,5 @@ const contactListStyles = StyleSheet.create({
 
 export {
     contactListStyles,
-    mainContactStyles,
     searchBarStyles
 }

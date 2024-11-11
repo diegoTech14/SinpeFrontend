@@ -29,11 +29,14 @@
   }
   
   function initialsFormat(name: string){
-    return name
+
+    const initials = name
     .split(" ")
     .slice(0, 2)
     .map((word: string) => word.charAt(0).toUpperCase())
     .join("");
+
+    return initials
   }
   
   export {

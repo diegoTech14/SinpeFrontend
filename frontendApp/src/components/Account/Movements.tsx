@@ -3,8 +3,8 @@ import {
   View,
   FlatList,
   Text,
-  StyleSheet,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { Movement } from "../../interfaces";
 import { useEffect } from "react";
@@ -12,8 +12,11 @@ import api from "../../../api";
 import { movementDate } from "../../utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { accountMovementsStyles as styles } from "./styles";
+import { Link } from "expo-router";
+import { useRouter } from "expo-router";
 
 const ContactMovements: React.FC = () => {
+  const router = useRouter();
   const [movements, setMovements] = useState<Movement[] | []>([]);
 
   const getMovements = async () => {
@@ -26,12 +29,13 @@ const ContactMovements: React.FC = () => {
     }
   };
 
-  const getMovement = async (movementId: string) => {
+  const getMovement = async (movementId: string, userName: string) => {
     const userPhone = await AsyncStorage.getItem("phoneUser");
     await AsyncStorage.setItem(
       "movement",
-      JSON.stringify({ phone: userPhone, id: movementId })
+      JSON.stringify({ phone: userPhone, id: movementId, name: userName })
     );
+    router.push("/MovementDetail");
   };
 
   useEffect(() => {
@@ -45,27 +49,29 @@ const ContactMovements: React.FC = () => {
         <FlatList
           data={movements}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => getMovement(item.id)}>
-              <View style={styles.movementRow}>
-                <View style={styles.infoContainer}>
-                  <Text style={styles.nameText}>SINPE móvil - {item.name}</Text>
-                  <Text style={styles.dateText}>
-                    {movementDate(item.date)} {item.hour}
-                  </Text>
+            <Link href="/MovementDetail" asChild>
+              <TouchableOpacity onPress={() => getMovement(item.id, item.name) }>
+                <View style={styles.movementRow}>
+                  <View style={styles.infoContainer}>
+                    <Text style={styles.nameText}>
+                      SINPE móvil - {item.name}
+                    </Text>
+                    <Text style={styles.dateText}>
+                      {movementDate(item.date)} {item.hour}
+                    </Text>
+                  </View>
+                  <Text style={styles.amountText}>- ₡{item.ammount}</Text>
                 </View>
-                <Text style={styles.amountText}>- ₡{item.ammount}</Text>
-              </View>
-            </TouchableOpacity>
+              </TouchableOpacity>
+            </Link>
           )}
           keyExtractor={(item) => item.id}
         />
       ) : (
-        <Text>No hay movimientos</Text>
+        <ActivityIndicator style={styles.loader} size="large" color="#5A67D8" />
       )}
     </View>
   );
 };
-
-
 
 export default ContactMovements;
