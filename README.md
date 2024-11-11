@@ -60,5 +60,7 @@ In this repository there are some aspects to improve
 - The pull to refresh can be improved to do it from the root of the screen and not only from the movements section
 - The code can be improved to make it more atomic and separate the components in a better way
 - Certain sections of the code can be improved where it is more readable and organized
+- Implement the search bar to improve the UI/UX
+- Improve the date and hour format
 
 
