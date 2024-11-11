@@ -8,10 +8,10 @@ import {
 } from "react-native";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { NavigationContainer } from "@react-navigation/native";
 import api from "../../../api";
 import { Contact } from "../../interfaces";
 import { contactListStyles as styles } from "./styles";
+import { initialsFormat } from "../../utils";
 
 type ContactItemProps = {
   name: string;
@@ -24,11 +24,7 @@ const handleStorage = async (object: ContactItemProps) => {
 
 const ContactItem: React.FC<ContactItemProps> = ({ name, phone }) => {
   
-  const initials = name
-    .split(" ")
-    .slice(0, 2) 
-    .map(word => word.charAt(0).toUpperCase())
-    .join(""); 
+  const initials = initialsFormat(name);
 
   return (
     <TouchableOpacity style={styles.contactItem}

@@ -1,4 +1,4 @@
-function isToday(dateString: string): boolean {
+  function isToday(dateString: string): boolean {
     const today = new Date();
     const formattedToday = today.toISOString().split('T')[0];
   
@@ -22,15 +22,22 @@ function isToday(dateString: string): boolean {
     return `${dateParts.day}/${dateParts.month}/${dateParts.year}`;
   }
   
-  export function movementDate(dateString: string): string {
+  function movementDate(dateString: string): string {
     const formattedDate = formatDate(dateString);  
     
     return isToday(dateString) ? "Hoy" : formattedDate; 
   }
   
-
+  function initialsFormat(name: string){
+    return name
+    .split(" ")
+    .slice(0, 2)
+    .map((word: string) => word.charAt(0).toUpperCase())
+    .join("");
+  }
   
-  module.exports = {
-    movementDate
+  export {
+    movementDate,
+    initialsFormat
   };
   

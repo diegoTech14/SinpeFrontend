@@ -1,20 +1,12 @@
 import React, { useEffect, useState } from "react";
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-} from "react-native";
+import { SafeAreaProvider, useSafeAreaInsets, } from "react-native-safe-area-context";
+import { View, Text, TouchableOpacity, TextInput } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Sinpe } from "../../interfaces";
 import api from "../../../api";
 import { sinpeStyles as styles } from "./styles";
+import { initialsFormat } from "../../utils";
 
 type ContactItemProps = {
   name: string;
@@ -23,9 +15,10 @@ type ContactItemProps = {
 };
 
 const MoneyData = () => {
+
   const insets = useSafeAreaInsets();
   const [sinpeData, setSinpeData] = useState<Sinpe>({
-    phoneSend:"",
+    phoneSend: "",
     phoneReceive: "",
     ammount: 0,
     detail: "",
@@ -42,13 +35,8 @@ const MoneyData = () => {
     const contactObject = JSON.parse(contact || "");
     const name = contactObject.name;
 
-    const initials = name
-      .split(" ")
-      .slice(0, 2)
-      .map((word: string) => word.charAt(0).toUpperCase())
-      .join("");
-
-      setUserData({
+    const initials = initialsFormat(name);
+    setUserData({
       name: name,
       initials: initials,
       phone: contactObject.phone,
@@ -64,16 +52,17 @@ const MoneyData = () => {
 
   const sendSinpe = async () => {
     try {
-      const response = await api.patch("/balance",sinpeData);
-      console.log("Sinpe sent:", response.data);
+      await api.patch("/balance", sinpeData);
     } catch (error) {
       console.error("Error loading phones from AsyncStorage:", error);
     }
-  }
+  };
+
   const sinpe = async () => {
     try {
       const userSend = await AsyncStorage.getItem("phoneUser");
       const userReceive = await AsyncStorage.getItem("user");
+
       const phoneReceive = JSON.parse(userReceive || "");
       const phoneSend = JSON.parse(userSend || "");
 
@@ -92,7 +81,6 @@ const MoneyData = () => {
       sendSinpe();
     }
   }, [sinpeData]);
-
 
   useEffect(() => {
     initialsName();
@@ -116,21 +104,18 @@ const MoneyData = () => {
         </TouchableOpacity>
         <Text style={styles.label}>Monto</Text>
         <TextInput
-          onChangeText={(text) => handleInputChange("ammount",text)}
+          onChangeText={(text) => handleInputChange("ammount", text)}
           placeholder="Monto a transferir"
           style={styles.searchInput}
         />
         <Text style={styles.label}>Detalle</Text>
         <TextInput
-          onChangeText={(text) => handleInputChange("detail",text)}
+          onChangeText={(text) => handleInputChange("detail", text)}
           placeholder="Detalle"
           style={styles.searchInput}
         />
         <View>
-          <TouchableOpacity 
-            style={styles.button}
-            onPress={sinpe}
-            >
+          <TouchableOpacity style={styles.button} onPress={sinpe}>
             <Text style={styles.buttonText}>Confirmar</Text>
           </TouchableOpacity>
         </View>
@@ -138,7 +123,5 @@ const MoneyData = () => {
     </SafeAreaProvider>
   );
 };
-
-
 
 export default MoneyData;

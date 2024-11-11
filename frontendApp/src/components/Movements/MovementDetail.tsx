@@ -9,7 +9,7 @@ import { MovementDetailObject, Movement } from "../../interfaces";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import api from "../../../api";
 import { movementDetailStyles as styles } from "./styles";
-
+import { initialsFormat } from "../../utils";
 
 const MoneyData = () => {
   
@@ -32,11 +32,7 @@ const MoneyData = () => {
     const contactObject = JSON.parse(contact || "");
     const name = contactObject.name;
 
-    const initials = name
-      .split(" ")
-      .slice(0, 2)
-      .map((word: string) => word.charAt(0).toUpperCase())
-      .join("");
+    const initials = initialsFormat(name);
 
       setUserData({
       name: name,
@@ -45,12 +41,10 @@ const MoneyData = () => {
     });
   };
 
-
   const getMovementDetail = async ()  => {
     const movObject = await AsyncStorage.getItem("movement");
     const movStorage = JSON.parse(movObject || "");
-    console.log(movStorage)
-    const response = await api.get<Movement>(`/movement/${movStorage.phone}/${movStorage.id}`)
+    const response = await api.get<Movement>(`/movement/${movStorage.phone}/${movStorage.id}`);
     setMovement(response.data);
   }
 
