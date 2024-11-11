@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "scheme":"wink",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -20,8 +21,9 @@
         "backgroundColor": "#ffffff"
       }
     },
-    "web": {
-      
-    }
+    "web": {},
+    "plugins": [
+      "expo-router"
+    ]
   }
 }
