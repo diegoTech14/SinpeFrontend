@@ -10,13 +10,15 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import AccountBalance from "../src/components/Account/AccountBalance";
 import ContactMovements from "../src/components/Account/Movements";
 import { mainAccountStyles as styles } from "./styles";
-import { Link } from "expo-router";
+import { Link, useFocusEffect } from "expo-router";
 import { Contact } from "../src/interfaces";
 import api from "../api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router";
 
 const Account: React.FC = () => {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const winkImage = require("../assets/Vector.png");
   const [contactData, setContactData] = useState<Contact | null>(null);
 

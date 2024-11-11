@@ -8,7 +8,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import { Movement } from "../src/interfaces";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import api from "../api";
-import { movementDetailStyles as styles } from "../src/components/Movements/styles";
+import { movementDetailStyles as styles } from "./styles";
 import { initialsFormat } from "../src/utils";
 import { Link } from "expo-router";
 

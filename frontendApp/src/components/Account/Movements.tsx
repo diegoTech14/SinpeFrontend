@@ -1,49 +1,53 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   FlatList,
   Text,
   TouchableOpacity,
   ActivityIndicator,
-  RefreshControl
+  RefreshControl,
 } from "react-native";
 import { Movement } from "../../interfaces";
-import { useEffect } from "react";
-import api from "../../../api";
 import { movementDate } from "../../utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { accountMovementsStyles as styles } from "./styles";
-import { Link } from "expo-router";
 import { useRouter } from "expo-router";
+import api from "../../../api"; 
 
 interface ContactMovementsProps {
-  getContactData: () => Promise<void>
+  getContactData: () => Promise<void>;
 }
 
 const ContactMovements: React.FC<ContactMovementsProps> = ({
-  getContactData
+  getContactData,
 }) => {
   const router = useRouter();
-  const [movements, setMovements] = useState<Movement[] | []>([]);
-  const [refreshing, setRefreshing] = React.useState(false);
-
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-
-    setTimeout(() => {
-      setRefreshing(false);
-      getContactData();
-      getMovements();
-    }, 2000);
-  }, []);
+  const [movements, setMovements] = useState<Movement[]>([]);
+  const [visibleMovements, setVisibleMovements] = useState<Movement[]>([]); 
+  const [page, setPage] = useState(1); 
+  const [refreshing, setRefreshing] = useState(false);
 
   const getMovements = async () => {
     try {
       const userPhone = await AsyncStorage.getItem("phoneUser");
       const response = await api.get<Movement[]>(`/movements/${userPhone}`);
       setMovements(response.data);
+      setVisibleMovements(response.data.slice(0, 10));
     } catch (error) {
-      console.error("Error fetching contact:", error);
+      console.error("Error", error);
+    }
+  };
+
+  // This method loads more data when it reaches the limit which is 10
+  const loadMoreData = () => {
+    if (movements.length > visibleMovements.length) {
+      const nextPage = page + 1;
+      setPage(nextPage);
+      const nextMovements = movements.slice(
+        visibleMovements.length,
+        nextPage * 10
+      ); 
+      setVisibleMovements((prev) => [...prev, ...nextMovements]);
     }
   };
 
@@ -56,6 +60,16 @@ const ContactMovements: React.FC<ContactMovementsProps> = ({
     router.push("/MovementDetail");
   };
 
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+
+    setTimeout(() => {
+      setRefreshing(false);
+      getContactData();
+      getMovements(); 
+    }, 2000);
+  }, []);
+
   useEffect(() => {
     getMovements();
   }, []);
@@ -65,28 +79,26 @@ const ContactMovements: React.FC<ContactMovementsProps> = ({
       <Text style={styles.title}>Movimientos</Text>
       {movements.length > 0 ? (
         <FlatList
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-          data={movements}
+          data={visibleMovements}
           renderItem={({ item }) => (
-            <Link href="/MovementDetail" asChild>
-              <TouchableOpacity onPress={() => getMovement(item.id, item.name)}>
-                <View style={styles.movementRow}>
-                  <View style={styles.infoContainer}>
-                    <Text style={styles.nameText}>
-                      SINPE móvil - {item.name}
-                    </Text>
-                    <Text style={styles.dateText}>
-                      {movementDate(item.date)} {item.hour}
-                    </Text>
-                  </View>
-                  <Text style={styles.amountText}>- ₡{item.ammount}</Text>
+            <TouchableOpacity onPress={() => getMovement(item.id, item.name)}>
+              <View style={styles.movementRow}>
+                <View style={styles.infoContainer}>
+                  <Text style={styles.nameText}>SINPE móvil - {item.name}</Text>
+                  <Text style={styles.dateText}>
+                    {movementDate(item.date)} {item.hour}
+                  </Text>
                 </View>
-              </TouchableOpacity>
-            </Link>
+                <Text style={styles.amountText}>- ₡{item.ammount}</Text>
+              </View>
+            </TouchableOpacity>
           )}
           keyExtractor={(item) => item.id}
+          onEndReached={loadMoreData} 
+          onEndReachedThreshold={0.5}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
         />
       ) : (
         <ActivityIndicator style={styles.loader} size="large" color="#5A67D8" />

@@ -3,7 +3,7 @@ import {
   SafeAreaProvider,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import { View, Text, TouchableOpacity, TextInput } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, Alert } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Sinpe } from "../src/interfaces";
@@ -79,9 +79,20 @@ const MoneyData = () => {
         phoneReceive: phoneReceive.phone || "",
       }));
 
-      router.push("/Account");
+      Alert.alert(
+        "Transferencia Confirmada",
+        "La transferencia de dinero se realizó con éxito.",
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              router.push("/Account");
+            },
+          },
+        ]
+      );
     } catch (error) {
-      console.error("Error loading phones from AsyncStorage:", error);
+      console.error("Error", error);
     }
   };
 

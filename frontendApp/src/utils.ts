@@ -10,16 +10,12 @@
   
   function formatDate(dateInput: string | Date): string {
     const date = new Date(dateInput);
+
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = String(date.getFullYear()).slice(-2);
   
-    const utcDate = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
-  
-    const dateParts = {
-      day: String(utcDate.getUTCDate()).padStart(2, "0"),
-      month: String(utcDate.getUTCMonth() + 1).padStart(2, "0"),
-      year: String(utcDate.getUTCFullYear()).slice(-2),
-    };
-  
-    return `${dateParts.day}/${dateParts.month}/${dateParts.year}`;
+    return `${day}/${month}/${year}`;
   }
   
   function movementDate(dateString: string): string {
