@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   ActivityIndicator,
+  RefreshControl
 } from "react-native";
 import { Movement } from "../../interfaces";
 import { useEffect } from "react";
@@ -15,9 +16,26 @@ import { accountMovementsStyles as styles } from "./styles";
 import { Link } from "expo-router";
 import { useRouter } from "expo-router";
 
-const ContactMovements: React.FC = () => {
+interface ContactMovementsProps {
+  getContactData: () => Promise<void>
+}
+
+const ContactMovements: React.FC<ContactMovementsProps> = ({
+  getContactData
+}) => {
   const router = useRouter();
   const [movements, setMovements] = useState<Movement[] | []>([]);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+
+    setTimeout(() => {
+      setRefreshing(false);
+      getContactData();
+      getMovements();
+    }, 2000);
+  }, []);
 
   const getMovements = async () => {
     try {
@@ -47,10 +65,13 @@ const ContactMovements: React.FC = () => {
       <Text style={styles.title}>Movimientos</Text>
       {movements.length > 0 ? (
         <FlatList
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
           data={movements}
           renderItem={({ item }) => (
             <Link href="/MovementDetail" asChild>
-              <TouchableOpacity onPress={() => getMovement(item.id, item.name) }>
+              <TouchableOpacity onPress={() => getMovement(item.id, item.name)}>
                 <View style={styles.movementRow}>
                   <View style={styles.infoContainer}>
                     <Text style={styles.nameText}>

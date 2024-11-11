@@ -12,6 +12,7 @@ import { sinpeStyles as styles } from "./styles";
 import { initialsFormat } from "../src/utils";
 import { Link } from "expo-router";
 import { ActivityIndicator } from "react-native";
+import { useRouter } from "expo-router";
 
 type ContactItemProps = {
   name: string;
@@ -21,6 +22,8 @@ type ContactItemProps = {
 
 const MoneyData = () => {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
+
   const [sinpeData, setSinpeData] = useState<Sinpe>({
     phoneSend: "",
     phoneReceive: "",
@@ -75,6 +78,8 @@ const MoneyData = () => {
         phoneSend: phoneSend.toString() || "",
         phoneReceive: phoneReceive.phone || "",
       }));
+
+      router.push("/Account");
     } catch (error) {
       console.error("Error loading phones from AsyncStorage:", error);
     }
